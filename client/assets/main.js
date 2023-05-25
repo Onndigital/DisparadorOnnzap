@@ -206,97 +206,58 @@ let interpolateString = (string, ref, params) => {
 // source: PeterMader at https://stackoverflow.com/questions/45498873/add-a-delay-after-executing-each-iteration-with-foreach-loop
 let sendMessages = () => {
 	clearConsole()
-  document.querySelector(".loading-dots").style.display = "block"
+	document.querySelector(".loading-dots").style.display = "block"
 	document.querySelector(".progress-area-wrapper").style.display = "block"
 	document.querySelector(".template-area-wrapper").style.display = "none"
 	document.querySelector(".preview-card").classList.add("preview-hidden")
 	document.querySelector(".preview-card").classList.remove("preview-shown")
-
-// var array = ['some', 'array', 'containing', 'words'];
-	var interval = 5000 // how much time should the delay between two iterations be (in milliseconds)?
+  
+	var interval = parseInt(document.getElementById("tempo-disparo").value) * 1000; // Obtenha o valor do tempo de disparo e converta para milissegundos
 	var promise = Promise.resolve()
 	formattedData.forEach(function (e, i) {
-		if (i !== 0) {
-		  promise = promise.then(function () {
-		  	updateStatus(i - 1,"sending...")
-		  	updateProgress(`${i}/${formattedData.length - 1}`)
-		    console.log(`Mengirimkan pesan ke ${e[2]}`)
-				// console.log(`pesannya adalah: ${encodeURIComponent(rawMsg[i - 1])}`)
-		    // fetch(document.getElementById("server").value + "send-message", {
-				// 	method: "POST",
-				// 	headers: {
-				// 		"content-type":"application/x-www-form-urlencoded"
-				// 	},
-				// 	body: `number=${e[1]}&message=${encodeURIComponent(rawMsg[i - 1])}`
-				// })
-		    fetch(document.getElementById("server").value + "send-message", {
-					method: "POST",
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({number: e[1], message: rawMsg[i - 1]})
-				})
-				.then(r => r.json())
-				.then(res => {
-					console.log(res)
-				  // console.log("Request complete! response:", res.text())
-				  if (res.status) {
-				  	updateStatus(i - 1, "success")
-				  } else {
-				  	updateStatus(i - 1, "failed")
-				  	toast("error! silakan buka console", "danger")
-				  }
-				}).catch(err => {
-					console.log("Fetch gagal! err:", err)
-					updateStatus(i - 1, "failed")
-			  	toast("error! silakan buka console", "danger")
-				})
-		    return new Promise(function (resolve) {
-		      setTimeout(resolve, interval)
-		    })
+	  if (i !== 0) {
+		promise = promise.then(function () {
+		  updateStatus(i - 1, "sending...")
+		  updateProgress(`${i}/${formattedData.length - 1}`)
+		  console.log(`Mengirimkan pesan ke ${e[2]}`)
+		  fetch(document.getElementById("server").value + "send-message", {
+			method: "POST",
+			headers: {
+			  'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ number: e[1], message: rawMsg[i - 1] })
 		  })
-		}
+			.then(r => r.json())
+			.then(res => {
+			  console.log(res)
+			  // console.log("Request complete! response:", res.text())
+			  if (res.status) {
+				updateStatus(i - 1, "success")
+			  } else {
+				updateStatus(i - 1, "failed")
+				toast("error! silakan buka console", "danger")
+			  }
+			}).catch(err => {
+			  console.log("Fetch gagal! err:", err)
+			  updateStatus(i - 1, "failed")
+			  toast("error! silakan buka console", "danger")
+			})
+		  return wait(interval); // Aguarde o intervalo de tempo antes de prosseguir para a próxima iteração
+		})
+	  }
 	})
-
+  
 	promise.then(function () {
 	  console.log('Envio de mensagem .')
 	  updateProgress("Disparo completo")
 	  document.querySelector(".loading-dots").style.display = "none"
-	  setTimeout(()=>{
-	  	document.querySelector(".progress-area-wrapper").style.display = "none"
-			document.querySelector(".template-area-wrapper").style.display = "block"
+	  setTimeout(() => {
+		document.querySelector(".progress-area-wrapper").style.display = "none"
+		document.querySelector(".template-area-wrapper").style.display = "block"
 	  }, 1000)
 	})
-// 	formattedData.forEach(async (e, i) => {
-// 		await wait(3000)
-// 		console.log(`menjalankan fetch untuk ${e[2]}`)
-// 
-// 		fetch(document.getElementById("server").value, {
-// 			method: "POST",
-// 			headers: {
-// 				"content-type":"application/x-www-form-urlencoded"
-// 			},
-// 			body: `number=${e[1]}%40c.us&message=${rawMsg[i]}`
-// 		})
-// 		.then(res => {
-// 		  console.log("Request complete! response:", res)
-// 		}).catch(err => {
-// 			console.log("Fetch gagal! err:", err)
-// 		})
-// 	})
-
-	// fetch(document.getElementById("server").value, {
-	// 	method: "POST",
-	// 	headers: {
-	// 		"content-type":"application/x-www-form-urlencoded"
-	// 	},
-	// 	body: "number=6281233745324%40c.us&message=" + rawMsg[1]
-	// }).then(res => {
-	//   console.log("Request complete! response:", res)
-	// }).catch(err => {
-	// 	console.log("Fetch gagal! err:", err)
-	// })
-}
+  }
+  
 
 // fungsi wait
 // sumber: https://stackoverflow.com/questions/42529476/let-promise-wait-a-couple-of-seconds-before-return
