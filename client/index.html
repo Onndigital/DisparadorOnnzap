@@ -18,11 +18,10 @@
 </head>
 
 <body>
-		<div class="toolbar">Seja bem-vindo!
-		</div>
 			<header>
 				<img src="./assets/logoLoginOption.png" style="width:100px">
-				<h3>Disparador Onnzap</h3>
+				<h3>Intervalo de Tempo</h3>
+				<input type="number" id="tempo-disparo" placeholder="Tempo de Disparo (em segundos)">
 				<p>Envie mensagens em massa via WhatsApp.</p>
 			</header>
 	<div class="scan hidden">
@@ -78,7 +77,7 @@
 				<section>
 					<div class="card">
 						<div class="body server-input">
-							<input type="text" id="server" value="http://localhost:8000/">
+							<input type="text" id="server" value="http://192.168.238.131:8000/">
 							<button id="save-server" onclick="toast('fitur simpan belum tersedia')">Salvar</button>
 						</div>
 					</div>
