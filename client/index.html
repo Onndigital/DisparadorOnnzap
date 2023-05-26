@@ -15,17 +15,28 @@
 			left: 0;
 		}
 	</style>
+	<link rel="stylesheet" type="text/css" href="main.css">
 </head>
 
 <body>
 			<header>
 				<img src="./assets/logoLoginOption.png" style="width:100px">
-				<h3>Intervalo de Tempo</h3>
-				<input type="number" id="tempo-disparo" placeholder="Tempo de Disparo (em segundos)">
 				<p>Envie mensagens em massa via WhatsApp.</p>
 			</header>
-	<div class="scan hidden">
-		<script>
+				<section class="middle">
+				<div class="card file-upload">
+					<div class="title">Carregue seu arquivo CSV</div>
+					<input type="file" id="csvFileInput" accept=".csv">
+					<br>
+					<button id="loadButton" onclick="loadCSVData()">Carregar</button>
+				</div>
+				<div class="card file-upload">
+					<div class="title">Intervalo de Tempo</div>
+				<input type="number" id="tempo-disparo" placeholder="Tempo de Disparo (em segundos)">
+				</div>
+				</section>
+				<div class="scan hidden">
+			<script>
 			const resizeScan = () => {
 				const scanWindow = document.querySelector(".scan")
 				const scanWindowContent = document.querySelector(".scan .content")
@@ -134,7 +145,7 @@
 			<div class="card">
 				<div class="title">Preview</div>
 				<div class="body">
-					<p>preview dari semua pesan akan muncul di sini.</p>
+					<p>pré-visualizações de todas as mensagens aparecerão aqui.</p>
 					<div class="outer-preview-wrapper">
 						<div class="preview-wrapper"></div>
 					</div>
@@ -190,6 +201,17 @@
 					</div>
 				</div>
 			</div>
+			<div class="card scheduling-area">
+				<div class="title">Agendamento de Disparo</div>
+				<div class="body">
+					<label for="datetime">Data e Hora:</label>
+					<input type="datetime-local" id="datetime">
+				</div>
+				<div class="footer">
+					<button id="scheduleButton" onclick="scheduleMessage()">Agendar</button>
+					<button id="cancelButton" onclick="cancelSchedule()">Cancelar</button>
+				</div>
+			</div>	  
 		</section>
 	</main>
 	<footer>
