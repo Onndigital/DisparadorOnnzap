@@ -280,3 +280,129 @@ let clearConsole = () => {
 	console.log('%cmade with <3 by afarhansib', 'font-weight: bold; font-size: 30px;color: #ff2600; text-shadow: 1px 1px 0px black , -1px -1px 0px white')
 	console.log('%cvisit me on https://afarhansib.github.io/', 'font-weight: bold; font-size: 20px;color: black; text-shadow: 1px 1px 0px #fc0 , -1px -1px 0px white')
 }
+function loadCSVData() {
+	var csvFileInput = document.getElementById('csvFileInput');
+	var dataTextArea = document.getElementById('data');
+  
+	if (csvFileInput.files.length > 0) {
+	  var file = csvFileInput.files[0];
+	  var reader = new FileReader();
+  
+	  reader.onload = function (e) {
+		var contents = e.target.result;
+		var csvData = parseCSV(contents);
+  
+		if (csvData) {
+		  renderTable(csvData);
+		  dataTextArea.value = contents;
+		} else {
+		  alert('Falha ao processar o arquivo CSV.');
+		}
+	  };
+  
+	  reader.readAsText(file);
+	}
+  }
+  
+  function parseCSV(csvText) {
+	var rows = csvText.split('\n');
+	var data = [];
+  
+	if (rows.length > 0) {
+	  var headers = rows[0].split(',');
+  
+	  for (var i = 1; i < rows.length; i++) {
+		var row = rows[i].split(',');
+  
+		if (row.length === headers.length) {
+		  var rowData = {};
+  
+		  for (var j = 0; j < headers.length; j++) {
+			rowData[headers[j]] = row[j];
+		  }
+  
+		  data.push(rowData);
+		} else {
+		  return null; // Arquivo CSV inválido
+		}
+	  }
+	}
+  
+	return data;
+  }
+  
+  function renderTable(data) {
+	var tableBody = document.querySelector('.data-area .table-wrapper tbody');
+	tableBody.innerHTML = '';
+  
+	for (var i = 0; i < data.length; i++) {
+	  var row = data[i];
+	  var tableRow = document.createElement('tr');
+  
+	  for (var key in row) {
+		var tableCell = document.createElement('td');
+		tableCell.textContent = row[key];
+		tableRow.appendChild(tableCell);
+	  }
+  
+	  tableBody.appendChild(tableRow);
+	}
+  }
+  
+  let isScheduled = false;
+
+function scheduleMessage() {
+  const datetimeInput = document.getElementById('datetime');
+  const datetimeValue = datetimeInput.value;
+
+  if (datetimeValue === '') {
+    toast('Selecione uma data e hora para agendar o disparo.');
+    return;
+  }
+
+  const now = new Date();
+  const selectedDatetime = new Date(datetimeValue);
+
+  if (selectedDatetime <= now) {
+    toast('Selecione uma data e hora no futuro para agendar o disparo.');
+    return;
+  }
+
+  const timeDifference = selectedDatetime - now;
+
+  setTimeout(() => {
+    if (!isScheduled) {
+      isScheduled = true;
+      sendMessages();
+    }
+  }, timeDifference);
+
+  toast(`Disparo agendado para ${datetimeValue}.`);
+}
+
+function cancelSchedule() {
+  // Aqui você pode adicionar a lógica para cancelar o agendamento de disparo.
+
+  isScheduled = false;
+  toast('Agendamento de disparo cancelado.');
+}
+
+/*function sendMessages() {
+  // Aqui está a lógica existente para o botão "Disparar" no arquivo index.html.
+  // Certifique-se de ajustar a lógica conforme necessário para o seu projeto.
+
+  const dataInput = document.getElementById('data');
+  const messages = dataInput.value.split('\n');
+
+  for (let i = 1; i < messages.length; i++) {
+    const phoneNumber = messages[i].split(',')[0];
+    const message = messages[i].split(',')[1];
+
+    // Lógica para enviar mensagem para o número de telefone usando a mensagem fornecida.
+    // Substitua essa parte com a lógica específica do seu projeto.
+    console.log(`Enviando mensagem para ${phoneNumber}: ${message}`);
+  }
+
+  isScheduled = false;
+  
+}	*/  
